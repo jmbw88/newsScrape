@@ -1,0 +1,23 @@
+  {{!-- Hero --}}
+  <section class="hero hero-image is-medium is-bold has-bg-img">
+    <div class="hero-body">
+      <div class="container centered">
+        <h1 class="title has-text-primary is-size-1">
+          Saved Articles
+        </h1>
+        <h2 class="subtitle has-text-primary">
+          NPR Edition
+        </h2>
+      </div>
+    </div>
+  </section>
+
+<section class="section">
+  <div class="container">
+    {{#if data}}
+    {{#each data}}
+    {{> cards/saved-card}}
+    {{/each}}
+    {{else}}
+    <h1>No Articles Saved</h1>
+    {{/if}}

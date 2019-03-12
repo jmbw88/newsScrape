@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>News!</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <style>
+    .hero-image {
+      background-image: url("https://cdn.empireonline.com/jpg/80/0/0/1200/675/0/0/0/0/0/0/0/t/films/8699/images/8WsItKHM14rhyG8hW6hswkAtVu.jpg");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      background-color: #999;
+      opacity: 1;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    .centered h1,
+    .centered h2 {
+      text-shadow: 2px 2px 4px black;
+    }
+
+    body {
+      background: lightsalmon;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <h1 class="navbar-item title is-3">KVWN Channel 4 News</h1>
+
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+        data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item home">
+          Home
+        </a>
+
+        <a class="navbar-item" id="save-page">
+          Saved Articles
+        </a>
+
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" id="scrape">
+            <strong>Get the news!</strong>
+          </a>
+          <a class="button is-light" id="delete">
+            Remove the news!
+          </a>
+        </div>
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  {{{body}}}
+
+  
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="/public/js/app.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+  console.log('client js')
+var $scrape = $("#scrape");
+var $delete = $("#delete");
+var $saveButton = $(".save-button");
+var $home = $('.home');
+var $removeButton = $('.remove-button');
+var $savedPage = $('#save-page')
+
+let API = {
+  saveArticle: function(beer) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      type: "POST",
+      url: "api/beers",
+      data: JSON.stringify(beer)
+    });
+  },
+    updateSave: function(id) {
+    return $.ajax({
+      url: "save/" + id,
+      type: "PUT"
+    });
+  },
+      updateRemove: function(id) {
+    return $.ajax({
+      url: "remove/" + id,
+      type: "PUT"
+    });
+  },
+  getArticles: function() {
+    return $.ajax({
+      url: "/",
+      type: "GET"
+    });
+  },
+    getSavedArticles: function() {
+    return $.ajax({
+      url: "/saved",
+      type: "GET"
+    });
+  },
+  scrapeArticles: function() {
+    return $.ajax({
+      url: "/scrape",
+      type: "GET"
+    });
+  },
+  deleteArticles: function() {
+    return $.ajax({
+      url: "/delete",
+      type: "DELETE"
+    });
+  }
+};
+
+var handleScrape = function(event) {
+  event.preventDefault();
+  API.scrapeArticles();
+  setTimeout(returnHome, 1000);
+};
+
+var handleDelete = function(event) {
+  event.preventDefault();
+  API.deleteArticles();
+  setTimeout(returnHome, 1000);
+};
+
+var handleSave = function(event) {
+  console.log($(this).data('id'))
+  let id = $(this).data('id');
+  event.preventDefault();
+
+  API.updateSave(id)
+  setTimeout(returnHome, 500);
+};
+
+var handleRemove = function(event) {
+  console.log($(this).data('id'))
+  let id = $(this).data('id');
+  event.preventDefault();
+
+  API.updateRemove(id)
+  setTimeout(goToSaved, 500);
+};
+
+var goToSaved = function() {
+  console.log('you clicked go to save')
+  {{!-- API.getSavedArticles(); --}}
+    window.location.href = "/saved";
+}
+
+
+var returnHome = function() {
+  window.location.href = "/";
+};
+
+$scrape.on("click", handleScrape);
+$delete.on("click", handleDelete);
+$saveButton.on("click", handleSave);
+$removeButton.on("click", handleRemove);
+$home.on("click", returnHome);
+$savedPage.on("click", goToSaved);
+
+
+
+  </script>
+  
+
+</body>
+
+</html>
